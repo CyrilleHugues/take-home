@@ -7,18 +7,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
-class EncryptController
+class DecryptController
 {
     public function __construct(private Cypher $cypher)
     {
     }
 
-    #[Route('/encrypt', name: 'cryptography_encrypt', methods: ['POST'])]
-    public function encrypt(Request $request): JsonResponse
+    #[Route('/decrypt', name: 'cryptography_decrypt', methods: ['POST'])]
+    public function decrypt(Request $request): JsonResponse
     {
         $payload = $request->getPayload()->all();
-        $encryptedData = $this->cypher->encrypt($payload);
+        $decryptedData = $this->cypher->decrypt($payload);
 
-        return new JsonResponse($encryptedData, JsonResponse::HTTP_OK);
+        return new JsonResponse($decryptedData, JsonResponse::HTTP_OK);
     }
 }

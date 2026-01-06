@@ -20,6 +20,11 @@ class Cypher
 
     public function decrypt(array $data): array
     {
-        return $data;
+        $decrypted = [];
+        foreach ($data as $key => $value) {
+            $decrypted[$key] = base64_decode($value, true);
+        }
+
+        return $decrypted;
     }
 }
