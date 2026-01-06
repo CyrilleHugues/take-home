@@ -2,10 +2,10 @@
 
 namespace App\Tests\Unit\Cryptography\Services;
 
+use App\Cryptography\Services\SignatureHmacStrategy;
 use App\Cryptography\Services\Signer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SignerTest extends TestCase
 {
@@ -14,7 +14,7 @@ class SignerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->signer = new Signer('lkbmzH70ZglvHRhfIFht');
+        $this->signer = new Signer(new SignatureHmacStrategy('lkbmzH70ZglvHRhfIFht'));
     }
 
     public static function signProvider(): array

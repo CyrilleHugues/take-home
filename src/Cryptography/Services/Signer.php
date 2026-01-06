@@ -5,7 +5,7 @@ namespace App\Cryptography\Services;
 
 class Signer
 {
-    public function __construct(private string $signatureSecret)
+    public function __construct(private SignatureStrategy $strategy)
     {
     }
 
@@ -30,11 +30,7 @@ class Signer
     {
         $toBeSigned = $this->recursiveKeySort($data);
 
-        return hash_hmac(
-            'sha256',
-            json_encode($toBeSigned, JSON_UNESCAPED_SLASHES),
-            $this->signatureSecret
-        );
+        return $this->strategy->sign($toBeSigned);
     }
 
     public function verify(string $signature, array $data): bool
