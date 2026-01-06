@@ -9,16 +9,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class EncryptController
 {
-    public function __construct(private Cypher $cypher)
-    {
-    }
-
     #[Route('/encrypt', name: 'cryptography_encrypt', methods: ['POST'])]
-    public function encrypt(Request $request): JsonResponse
+    public function encrypt(Cypher $cypher, Request $request): JsonResponse
     {
         $payload = $request->getPayload()->all();
-        $encryptedData = $this->cypher->encrypt($payload);
+        $encryptedData = $cypher->encrypt($payload);
 
-        return new JsonResponse($encryptedData, JsonResponse::HTTP_OK);
+        return new JsonResponse($encryptedData);
     }
 }

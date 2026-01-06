@@ -9,16 +9,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DecryptController
 {
-    public function __construct(private Cypher $cypher)
-    {
-    }
-
     #[Route('/decrypt', name: 'cryptography_decrypt', methods: ['POST'])]
-    public function decrypt(Request $request): JsonResponse
+    public function decrypt(Cypher $cypher, Request $request): JsonResponse
     {
         $payload = $request->getPayload()->all();
-        $decryptedData = $this->cypher->decrypt($payload);
+        $decryptedData = $cypher->decrypt($payload);
 
-        return new JsonResponse($decryptedData, JsonResponse::HTTP_OK);
+        return new JsonResponse($decryptedData);
     }
 }
