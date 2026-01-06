@@ -58,4 +58,26 @@ class SignerTest extends TestCase
     {
         $this->assertEquals($expected, $this->signer->sign($input));
     }
+
+    public static function verifyProvider(): array
+    {
+        return [
+            'match' => [
+                ['a' => 'b', 'c' => 'd'],
+                '7d597e6a250585faaf3621cfd2c6bdc0b5e122649851d1d2170fbbbe4351e2d6',
+                true
+            ],
+            'no match' => [
+                ['a' => 'b', 'c' => 'd'],
+                '7362939889fc3f289e24268f3afc46fc6c4684d61bba03523b7b774d0ed1221b',
+                false
+            ]
+        ];
+    }
+
+    #[DataProvider('verifyProvider')]
+    public function testVerifyMethod($data, $signature, $expected): void
+    {
+        $this->assertEquals($expected, $this->signer->verify($signature, $data));
+    }
 }

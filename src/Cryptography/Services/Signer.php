@@ -36,4 +36,9 @@ class Signer
             $this->signatureSecret
         );
     }
+
+    public function verify(string $signature, array $data): bool
+    {
+        return $signature === $this->sign($data);
+    }
 }
