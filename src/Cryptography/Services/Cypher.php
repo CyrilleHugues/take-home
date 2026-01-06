@@ -22,7 +22,7 @@ class Cypher
     {
         $decrypted = [];
         foreach ($data as $key => $value) {
-            $decrypted[$key] = base64_decode($value, true);
+            $decrypted[$key] = base64_decode($value, true) ?: $value;
         }
 
         return $decrypted;

@@ -41,4 +41,15 @@ class CypherTest extends TestCase
             $cypher->decrypt($data),
         );
     }
+
+    public function testItWillDecryptAPartiallyEncryptedPayload(): void
+    {
+        $data = ['first' => 'dGhpbmcgdG8gZW5jcnlwdA==', 'second' => "john@example.com"];
+        $cypher = new Cypher();
+
+        $this->assertEquals(
+            ['first' => 'thing to encrypt', 'second' => "john@example.com"],
+            $cypher->decrypt($data),
+        );
+    }
 }
