@@ -4,6 +4,10 @@ namespace App\Cryptography\Services;
 
 class Cypher
 {
+    public function __construct(private EncryptionStrategy $encryptionStrategy)
+    {
+    }
+
     public function encrypt(array $data): array
     {
         $encrypted = [];
@@ -12,7 +16,7 @@ class Cypher
             if (is_array($value)) {
                 $value = json_encode($value, JSON_UNESCAPED_SLASHES);
             }
-            $encrypted[$key] = base64_encode($value);
+            $encrypted[$key] = $this->encryptionStrategy->encrypt($value);
         }
 
         return $encrypted;
@@ -20,9 +24,9 @@ class Cypher
 
     private function decryptValue(string $value)
     {
-        $decoded = base64_decode($value, true);
-
-        if ($decoded === false) {
+        try {
+            $decoded = $this->encryptionStrategy->decrypt($value);
+        } catch (ValueIsUnencrypted) {
             return $value;
         }
 

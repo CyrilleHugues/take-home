@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Cryptography\Services;
 
+use App\Cryptography\Services\Base64Strategy;
 use App\Cryptography\Services\Cypher;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +14,7 @@ class CypherTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->cypher = new Cypher();
+        $this->cypher = new Cypher(new Base64Strategy());
     }
 
     public function testItWillReturnEncryptedSimpleData(): void
