@@ -15,4 +15,19 @@ class CypherTest extends TestCase
 
         $this->assertEquals(['test' => 'dGhpbmcgdG8gZW5jcnlwdA=='], $cypher->encrypt($data));
     }
+
+    public function testItWillReturnEncryptedMixedData(): void
+    {
+        $data = ['first' => 'thing to encrypt', 'second' => 'another thing', 'third' => ['sub' => 'array']];
+        $cypher = new Cypher();
+
+        $this->assertEquals(
+            [
+                'first' => 'dGhpbmcgdG8gZW5jcnlwdA==',
+                'second' => 'YW5vdGhlciB0aGluZw==',
+                'third' => 'eyJzdWIiOiJhcnJheSJ9',
+            ],
+            $cypher->encrypt($data)
+        );
+    }
 }
