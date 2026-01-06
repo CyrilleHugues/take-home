@@ -18,11 +18,27 @@ class Cypher
         return $encrypted;
     }
 
+    private function decryptValue(string $value)
+    {
+        $decoded = base64_decode($value, true);
+
+        if ($decoded === false) {
+            return $value;
+        }
+
+        $parsed = json_decode($decoded, true);
+        if ($parsed === null) {
+            return $decoded;
+        }
+
+        return $parsed;
+    }
+
     public function decrypt(array $data): array
     {
         $decrypted = [];
         foreach ($data as $key => $value) {
-            $decrypted[$key] = base64_decode($value, true) ?: $value;
+            $decrypted[$key] = $this->decryptValue($value);
         }
 
         return $decrypted;

@@ -8,18 +8,24 @@ use PHPUnit\Framework\TestCase;
 
 class CypherTest extends TestCase
 {
+    private Cypher $cypher;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->cypher = new Cypher();
+    }
+
     public function testItWillReturnEncryptedSimpleData(): void
     {
         $data = ['test' => 'thing to encrypt'];
-        $cypher = new Cypher();
 
-        $this->assertEquals(['test' => 'dGhpbmcgdG8gZW5jcnlwdA=='], $cypher->encrypt($data));
+        $this->assertEquals(['test' => 'dGhpbmcgdG8gZW5jcnlwdA=='], $this->cypher->encrypt($data));
     }
 
     public function testItWillReturnEncryptedMixedData(): void
     {
         $data = ['first' => 'thing to encrypt', 'second' => 'another thing', 'third' => ['sub' => 'array']];
-        $cypher = new Cypher();
 
         $this->assertEquals(
             [
@@ -27,29 +33,41 @@ class CypherTest extends TestCase
                 'second' => 'YW5vdGhlciB0aGluZw==',
                 'third' => 'eyJzdWIiOiJhcnJheSJ9',
             ],
-            $cypher->encrypt($data)
+            $this->cypher->encrypt($data)
         );
     }
 
     public function testItWillDecryptAFullyEncryptedPayload(): void
     {
         $data = ['test' => 'dGhpbmcgdG8gZW5jcnlwdA=='];
-        $cypher = new Cypher();
 
         $this->assertEquals(
             ['test' => 'thing to encrypt'],
-            $cypher->decrypt($data),
+            $this->cypher->decrypt($data),
         );
     }
 
     public function testItWillDecryptAPartiallyEncryptedPayload(): void
     {
         $data = ['first' => 'dGhpbmcgdG8gZW5jcnlwdA==', 'second' => "john@example.com"];
-        $cypher = new Cypher();
 
         $this->assertEquals(
             ['first' => 'thing to encrypt', 'second' => "john@example.com"],
-            $cypher->decrypt($data),
+            $this->cypher->decrypt($data),
+        );
+    }
+
+    public function testItWillDecryptObjectsToo(): void
+    {
+        $data = [
+            'first' => 'dGhpbmcgdG8gZW5jcnlwdA==',
+            'second' => 'YW5vdGhlciB0aGluZw==',
+            'third' => 'eyJzdWIiOiJhcnJheSJ9',
+        ];
+
+        $this->assertEquals(
+            ['first' => 'thing to encrypt', 'second' => 'another thing', 'third' => ['sub' => 'array']],
+            $this->cypher->decrypt($data)
         );
     }
 }
